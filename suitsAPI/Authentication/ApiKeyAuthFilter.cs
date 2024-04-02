@@ -14,11 +14,18 @@ namespace suitsAPI.Authentication
                 return;
             }
 
-
             KeyValuePair<bool, string> validation = ApiKeyValidation.IsValidKey(extractedApiKey!);
             if (!validation.Key)
             {
                 context.Result = new UnauthorizedObjectResult(validation.Value);
+                return;
+            }
+
+            string name = $"{context.HttpContext.Request.Method}{context.HttpContext.Request.Path!}";
+            KeyValuePair<bool, string> rightsValidation = ApiKeyValidation.AreRightsValid(extractedApiKey!, name);
+            if (!rightsValidation.Key)
+            {
+                context.Result = new UnauthorizedObjectResult(rightsValidation.Value);
                 return;
             }
         }

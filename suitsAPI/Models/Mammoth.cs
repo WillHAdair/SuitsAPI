@@ -4,15 +4,14 @@ namespace suitsAPI.Models
 {
     public class Mammoth
     {
-        public Instruction? CurrentInstruction { get; set; }
-        public bool IsStarted { get; set; }
-        public int ConnectedUsers { get; set; }
-
-        public void StartDemo()
+        public int instructionID { get; set; }
+        public double instructionDuration { get; set; }
+        public string description { get; set; }
+        public Mammoth(int instruction, double duration, string desc) 
         {
-            IsStarted = true;
-            //TODO: set CurrentInstruction
+            this.instructionID = instruction;
+            this.instructionDuration = duration;
+            this.description = desc;
         }
-    }
-
+    }   
 }

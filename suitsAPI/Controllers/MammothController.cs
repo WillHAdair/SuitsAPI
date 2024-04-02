@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using suitsAPI.Authentication;
 using suitsAPI.Models;
 
 namespace suitsAPI.Controllers
@@ -16,25 +17,26 @@ namespace suitsAPI.Controllers
             _logger = logger;
         }
 
-        private Factory factory;
-
         [HttpPost(Name = "StartDemo")]
-        public void StartDemo()
+        [ServiceFilter(typeof(ApiKeyAuthFilter))]
+        public string StartDemo()
         {
-            // Make sure I am not declaring 
-            factory = new Factory();
+            // Allow people to access the update methods
+            ApiKeyValidation.RequestedRights[$"GET{HttpContext.Request.Path}"] = false;
+            return "Demo Started";
         }
 
-        //[HttpGet(Name = "Initialize")]
-        //public Mammoth Initialize()
-        //{
-        //    return new Mammoth();
-        //}
+        [HttpGet(Name = "GetUpdate")]
+        [ServiceFilter(typeof(ApiKeyAuthFilter))]
+        public Mammoth GetUpdate(int instructionID)
+        {
+            List<Mammoth> updates = [
+                new Mammoth(0, 1.45, "Move into position"),
+                new Mammoth(1, 3.75, "Step off the platform"),
+                new Mammoth(2, 9.5, "Walk a counter-clockwise circle")
+            ];
 
-        //[HttpGet(Name = "GetUpdate")]
-        //public Mammoth GetUpdate(int instructionID)
-        //{
-        //    return null;
-        //}
+            return updates[instructionID];
+        }
     }
 }

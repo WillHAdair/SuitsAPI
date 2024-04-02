@@ -5,6 +5,19 @@ namespace suitsAPI.Authentication
 {
     public static class ApiKeyValidation
     {
+
+        public static Dictionary<string, bool> RequestedRights = new()
+        {
+            { "GET/WeatherForecast", true },
+            { "POST/api/Mammoth", true },
+            { "GET/api/Mammoth", true }, // Set this as admin until the test begins
+        };
+        public static Dictionary<string, string> MethodKeys = new()
+        {
+            { "GET/WeatherForecast", "5005-" },
+            { "POST/api/Mammoth", "5005-" },
+            { "GET/api/Mammoth", "5005-" },
+        };
         public static KeyValuePair<bool, string> IsValidKey(string apiKey)
         {
             /*
@@ -32,12 +45,19 @@ namespace suitsAPI.Authentication
 
             return new KeyValuePair<bool, string> (true, "Success");
         }
-        public static KeyValuePair<bool, string> AreRightsValid(string apiKey, bool adminRequired)
+        public static KeyValuePair<bool, string> AreRightsValid(string apiKey, string methodRequested)
         {
             /*
              * This method simply checks whether the supplied API key has enough rights to access the method requested, to avoid sending admin commands from non-admin users.
             */
-            if (adminRequired)
+            Regex initialCode = new("[0-9]{4}-");
+            var initialCodeResults = initialCode.Matches(apiKey);
+            if (initialCodeResults[1].Value != MethodKeys[methodRequested])
+            {
+                return new KeyValuePair<bool, string>(false, "You do not have rights to this project");
+            }
+
+            if (RequestedRights[methodRequested])
             {
                 Regex matches = new("[0-9]{4}-[0-9]{4}-");
                 var matchResults = matches.Matches(apiKey);
@@ -47,6 +67,7 @@ namespace suitsAPI.Authentication
                     return new KeyValuePair<bool, string>(false, "This is an admin method, invalid request");
                 }
             }
+
             return new KeyValuePair<bool, string>(true, "Success");
         }
     }
