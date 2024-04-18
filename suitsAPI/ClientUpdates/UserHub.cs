@@ -8,5 +8,10 @@ namespace suitsAPI.ClientUpdates
         {
             await Clients.All.SendAsync("UserStatus", userStatusPairs);
         }
+
+        public async Task StartDemo()
+        {
+            await Clients.All.SendAsync("DemoStarted");
+        }
     }
 }

@@ -17,15 +17,6 @@ namespace suitsAPI.Controllers
             _logger = logger;
         }
 
-        [HttpPost(Name = "StartDemo")]
-        [ServiceFilter(typeof(ApiKeyAuthFilter))]
-        public string StartDemo()
-        {
-            // Allow people to access the update methods
-            ApiKeyValidation.RequestedRights[$"GET{HttpContext.Request.Path}"] = false;
-            return "Demo Started";
-        }
-
         [HttpGet(Name = "GetUpdate")]
         [ServiceFilter(typeof(ApiKeyAuthFilter))]
         public Mammoth GetUpdate(int instructionID)

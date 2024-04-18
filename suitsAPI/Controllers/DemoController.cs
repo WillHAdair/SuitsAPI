@@ -20,24 +20,28 @@ namespace suitsAPI.Controllers
 
         [HttpPost(Name = "StartDemo")]
         [ServiceFilter(typeof(ApiKeyAuthFilter))]
-        public string StartDemo()
+        public async void StartDemo()
         {
             // Allow people to access the update methods
             ApiKeyValidation.RequestedRights[$"GET{HttpContext.Request.Path}"] = false;
-            return "Demo Started";
+            await _hubContext.Clients.All.SendAsync("StartDemo");
         }
 
         [HttpGet(Name = "GetUserCount")]
         [ServiceFilter(typeof(ApiKeyAuthFilter))]
         public async Task<Dictionary<string, bool>> GetUserCount(string demoType)
         {
-            List<User> users = GetUserByDemoType(GetDemoType(demoType));
-            int userCount = users.Count;
+            List<User> users = UserBase.GetUserByDemoType(UserBase.GetDemoType(demoType));
+            Dictionary<string, bool> userStatusPairs = new Dictionary<string, bool>();
+            foreach (User user in users)
+            {
+                userStatusPairs.Add(user.Username, user.IsReady);
+            }
 
             // Send the user count to all connected clients
-            await _hubContext.Clients.All.SendAsync("ReceiveUserCount", userCount);
+            await _hubContext.Clients.All.SendAsync("ReceiveUserCount", userStatusPairs);
 
-            return users;
+            return userStatusPairs;
         }
 
         [HttpPost(Name = "RegisterUser")]
@@ -45,7 +49,7 @@ namespace suitsAPI.Controllers
         public void RegisterUser(string apiKey, string userName, string demoType)
         {
             // Register the user
-            RegisterUserUsingAPIKeys(user);
+            UserBase.AddUser(apiKey, userName, apiKey.Contains("/0000"), demoType);
         }
     }
 }
