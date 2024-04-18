@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using API.Authentication;
+using API.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using suitsAPI.Authentication;
-using suitsAPI.Models;
 
-namespace suitsAPI.Controllers
+namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

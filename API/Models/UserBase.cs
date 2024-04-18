@@ -1,15 +1,20 @@
-﻿using static suitsAPI.Models.User;
+﻿using static API.Models.User;
 
-namespace suitsAPI.Models
+namespace API.Models
 {
     public static class UserBase
     {
         public static List<User> Users { get; set; } = new List<User>();
-        public static void AddUser(string apiKey, string userName, bool isAdmin, string demoType)
+        public static bool AddUser(string apiKey, string userName, bool isAdmin, string demoType)
         {
+            if (Users.Any(u => u.Password == apiKey))
+            {
+                return false;
+            }
             DemoType dt = GetDemoType(demoType);
             User user = new User(userName, apiKey, false, isAdmin, dt);
             Users.Add(user);
+            return true;
         }
 
         public static DemoType GetDemoType(string demoType)

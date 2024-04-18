@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace suitsAPI.Authentication
+namespace API.Authentication
 {
     public class ApiKeyAuthFilter : IAuthorizationFilter
     {

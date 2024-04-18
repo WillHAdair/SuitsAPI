@@ -1,14 +1,15 @@
-using suitsAPI.Authentication;
-
+using API.Authentication;
+using API.Hubs;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddSignalR();
+builder.Services.AddScoped<ApiKeyAuthFilter>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddScoped<ApiKeyAuthFilter>();
 
 var app = builder.Build();
 

@@ -1,7 +1,6 @@
-﻿using Microsoft.CodeAnalysis.Elfie.Diagnostics;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
-namespace suitsAPI.Authentication
+namespace API.Authentication
 {
     public static class ApiKeyValidation
     {
@@ -11,12 +10,14 @@ namespace suitsAPI.Authentication
             { "GET/WeatherForecast", true },
             { "POST/api/Mammoth", true },
             { "GET/api/Mammoth", true }, // Set this as admin until the test begins
+            { "POST/api/Demo", false },
         };
         public static Dictionary<string, string> MethodKeys = new()
         {
             { "GET/WeatherForecast", "5005-" },
             { "POST/api/Mammoth", "5005-" },
             { "GET/api/Mammoth", "5005-" },
+            { "POST/api/Demo", "5005-" },
         };
         public static KeyValuePair<bool, string> IsValidKey(string apiKey)
         {

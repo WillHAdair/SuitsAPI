@@ -1,4 +1,4 @@
-﻿namespace suitsAPI.Authentication
+﻿namespace API.Authentication
 {
     public static class AuthConstants
     {

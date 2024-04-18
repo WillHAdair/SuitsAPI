@@ -1,4 +1,4 @@
-﻿namespace suitsAPI.Models
+﻿namespace API.Models
 {
     public class Wiggle
     {

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.OpenApi;
-using Microsoft.AspNetCore.Http.HttpResults;
-namespace suitsAPI.Models
+﻿namespace API.Models
 {
     public class Mammoth
     {

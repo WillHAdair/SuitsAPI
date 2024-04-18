@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using API.Authentication;
+using API.Hubs;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using suitsAPI.Authentication;
-using suitsAPI.ClientUpdates;
-using suitsAPI.Models;
+using API.Models;
 
 namespace suitsAPI.Controllers
 {
@@ -16,15 +16,6 @@ namespace suitsAPI.Controllers
         public DemoController(IHubContext<UserHub> hubContext)
         {
             _hubContext = hubContext;
-        }
-
-        [HttpPost(Name = "StartDemo")]
-        [ServiceFilter(typeof(ApiKeyAuthFilter))]
-        public async void StartDemo()
-        {
-            // Allow people to access the update methods
-            ApiKeyValidation.RequestedRights[$"GET{HttpContext.Request.Path}"] = false;
-            await _hubContext.Clients.All.SendAsync("StartDemo");
         }
 
         [HttpGet(Name = "GetUserCount")]
@@ -46,10 +37,11 @@ namespace suitsAPI.Controllers
 
         [HttpPost(Name = "RegisterUser")]
         [ServiceFilter(typeof(ApiKeyAuthFilter))]
-        public void RegisterUser(string apiKey, string userName, string demoType)
+        public KeyValuePair<bool, string> RegisterUser(string apiKey, string userName, string demoType)
         {
             // Register the user
-            UserBase.AddUser(apiKey, userName, apiKey.Contains("/0000"), demoType);
+            var success = UserBase.AddUser(apiKey, userName, apiKey.Contains("/0000"), demoType);
+            return success ? new KeyValuePair<bool, string> ( true, "User registered" ) : new KeyValuePair<bool, string> ( false, "User already registered" );
         }
     }
 }
